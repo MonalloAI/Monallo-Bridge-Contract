@@ -1,38 +1,44 @@
+// hardhat.config.js
 require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config(); 
+require("dotenv").config();
+
+// 导入你创建的任务文件
+require("./tasks/storeData.js");
+require("./tasks/manualMint.js");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.28",
   networks: {
-    bsc_testnet: {
-      url: "https://bsc-testnet-dataseed.bnbchain.org",
-      accounts: [process.env.PRIVATE_KEY],
-      chainId: 97,
+    // imua 网络配置 (A链)
+    imua: {
+      url: process.env.IMUA_RPC_URL,
+      accounts: [process.env.IMUA_PRIVATE_KEY], // 部署DataStorage合约的账户
+      chainId: parseInt(process.env.IMUA_CHAIN_ID), // 从.env读取并转换为数字
     },
+    // Sepolia 测试网配置 (B链)
     sepolia: {
       url: process.env.SEPOLIA_RPC_URL,
-      // 修改这里，添加更多私钥
       accounts: [
-        process.env.PRIVATE_KEY,
-        process.env.PRIVATE_KEY_ADDR1, // 添加这个
-        process.env.PRIVATE_KEY_ADDR2  // 添加这个
-      ].filter(Boolean), // .filter(Boolean) 用于过滤掉可能为 undefined 的私钥（如果 .env 中没有配置）
-      chainId: 11155111,
+        process.env.PRIVATE_KEY,        // 部署Token合约的账户
+        process.env.PRIVATE_KEY_ADDR1,   // 手动操作员账户 (用于在B链上铸币)
+      ].filter(Boolean),
+      chainId: 11155111, // Sepolia的Chain ID
     },
   },
   etherscan: {
     apiKey: {
-      sepolia: process.env.ETHERSCAN_API_KEY,
-      bscTestnet: process.env.BSCSCAN_API_KEY,
+      sepolia: process.env.ETHERSCAN_API_KEY, // Sepolia的API Key
+      imua: process.env.IMUASCAN_API_KEY, // 如果imua有类似Etherscan的浏览器
     },
     customChains: [
+      // imua网络的自定义链配置 (如果imua有类似Etherscan的浏览器)
       {
-        network: "bscTestnet",
-        chainId: 97,
+        network: "imua",
+        chainId: parseInt(process.env.IMUA_CHAIN_ID),
         urls: {
-          api: "https://api-testnet.bscscan.com/api",
-          browser: "https://testnet.bscscan.com",
+          api: "YOUR_IMUASCAN_API_URL", // 替换为imua的API URL"
+          browser: "https://exoscan.org/", // 替换为imua的浏览器URL"
         },
       },
     ],
