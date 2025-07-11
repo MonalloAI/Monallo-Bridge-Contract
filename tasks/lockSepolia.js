@@ -1,7 +1,7 @@
 // tasks/lockSepolia.js
 const { task } = require("hardhat/config");
 
-const LOCK_TOKENS_ADDRESS = "0x1658cF06F2774ac2be7BB4308E53a7D8BE4861F2"; // LockTokens 合约地址 (Sepolia网络)
+const LOCK_TOKENS_ADDRESS = "0xA960259959584C308c87e8c06119e902cCBf88C8"; // LockTokens 合约地址 (Sepolia网络)
 
 task("lock-sepolia", "在B链上锁定Sepolia ETH并触发跨链事件") 
   .addParam("receiver", "A链 (imua) 上接收代币的地址") 
@@ -19,7 +19,7 @@ task("lock-sepolia", "在B链上锁定Sepolia ETH并触发跨链事件")
         process.exit(1);
     }
 
-    const LockTokens = await hre.ethers.getContractFactory("LockTokens");
+    const LockTokens = await hre.ethers.getContractFactory("contracts/simple-bridge/LockAssets.sol:LockTokens"); 
     // 使用 attach 连接到已部署的合约
     const lockTokens = await LockTokens.attach(LOCK_TOKENS_ADDRESS);
 
