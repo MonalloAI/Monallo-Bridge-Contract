@@ -1,7 +1,7 @@
 const { task } = require("hardhat/config");
 require("dotenv").config();
 
-const TOKEN_ADDRESS = "0xf4eAa1AFa7169c335A3956541F3AFf5b25057BEd"; // Token 合约地址 (imua)
+const TOKEN_ADDRESS = "0x21717FD336Db40Af910603f8a8b4aA202736C4Ec"; // Token 合约地址 (imua)
 
 task("manual-mint-imua", "根据B链事件数据在A链 (imua) 上手动铸造代币") 
   .addParam("recipient", "A链 (imua) 上接收代币的地址 (来自B链事件)") 
@@ -28,7 +28,7 @@ task("manual-mint-imua", "根据B链事件数据在A链 (imua) 上手动铸造�
     }
 
     // 使用 getContractAt 连接到 MintTokens 合约
-    const token = await hre.ethers.getContractAt("MintTokens", TOKEN_ADDRESS);
+    const token = await hre.ethers.getContractAt("contracts/simple-bridge/MintAssets.sol:MintTokens", TOKEN_ADDRESS); 
 
     const amountWei = hre.ethers.parseUnits(amount, 18); // 假设代币是18位小数
 
