@@ -2,25 +2,37 @@
 const hre = require("hardhat");
 require("dotenv").config();
 
-const TOKEN_ADDRESS = "0x75891AA11AC45ab150e81AE744728d11C72c472B"; // 你的 MintTokens 合约地址
+const TOKEN_ADDRESS = "0xf4eAa1AFa7169c335A3956541F3AFf5b25057BEd"; // 你的 MintTokens 合约地址 (在 imua 链上)
+// **重要：这些地址将获得 imua 链上 MintTokens 的 MINTER_ROLE**
+// 确保 PRIVATE_KEY_ADDR1 对应的地址在这里
 const MINTER_ADDRESS_TO_GRANT = [
-    "0xC4A9D75D8F80Da4750576493A8Cf270930C48137",
-    "0x86f07a6021088D3Bc091D4B18D1a3f90c867423B",
-]; 
+    "0x3E7BaB615e5F8867c3d1a5Aa62C0BF6528642E39",
+    "0x3dF5422b897d608630C9F708548F7C9f1f5e81fA",
+].filter(Boolean);
 
 async function main() {
-  const { ethers } = hre; 
+  const { ethers } = hre;
 
-  const [deployer] = await ethers.getSigners(); // 合约 owner
-  console.log(`正在使用账户 (合约 owner): ${deployer.address}`);
+  // 运行此脚本的账户需要是 MintTokens 合约的 DEFAULT_ADMIN_ROLE (即部署者)
+  const [deployer] = await ethers.getSigners();
+  console.log(`正在使用账户 (MintTokens 合约 DEFAULT_ADMIN_ROLE): ${deployer.address}`);
 
-  const Token = await ethers.getContractFactory("MintTokens"); 
+  if (!TOKEN_ADDRESS || TOKEN_ADDRESS === "0x...") {
+    console.error("错误: 请在 scripts/grantMinterRole.js 中更新 TOKEN_ADDRESS (imua 链上的 MintTokens 地址)");
+    process.exit(1);
+  }
+  if (MINTER_ADDRESS_TO_GRANT.length === 0) {
+    console.error("错误: 请在 scripts/grantMinterRole.js 中指定 MINTER_ADDRESS_TO_GRANT");
+    process.exit(1);
+  }
+
+  const Token = await ethers.getContractFactory("MintTokens");
   const token = await Token.attach(TOKEN_ADDRESS);
 
   const MINTER_ROLE = ethers.keccak256(ethers.toUtf8Bytes("MINTER_ROLE"));
 
   for (const addressToGrant of MINTER_ADDRESS_TO_GRANT) {
-    console.log(`\n正在授予 ${addressToGrant} MINTER_ROLE...`);
+    console.log(`\n正在授予 ${addressToGrant} MINTER_ROLE (在 imua 链上)...`);
 
     try {
       // 检查是否已经拥有权限，避免重复交易
@@ -33,14 +45,14 @@ async function main() {
       const tx = await token.connect(deployer).grantRole(MINTER_ROLE, addressToGrant);
       await tx.wait();
 
-      console.log(`MINTER_ROLE 已成功授予 ${addressToGrant}!`);
+      console.log(`MINTER_ROLE 已成功授予 ${addressToGrant} (在 imua 链上)!`);
       console.log(`交易哈希: ${tx.hash}`);
 
       const hasRoleAfter = await token.hasRole(MINTER_ROLE, addressToGrant);
       console.log(`${addressToGrant} 是否拥有 MINTER_ROLE: ${hasRoleAfter}`);
     } catch (error) {
       console.error(`授予 ${addressToGrant} MINTER_ROLE 失败:`, error.message);
-      
+
     }
   }
 

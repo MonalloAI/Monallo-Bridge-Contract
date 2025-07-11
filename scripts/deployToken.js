@@ -1,20 +1,20 @@
-// scripts/deployToken.js
 const hre = require("hardhat");
 
 async function main() {
   const [deployer] = await hre.ethers.getSigners();
-  console.log("正在使用账户部署 MintTokens (MON代币) 合约:", deployer.address);
-  console.log("此账户将成为合约的 owner。");
+  // 部署 MintTokens (MON 代币) 合约
+  console.log("正在使用账户部署 MintTokens (MON 代币) 合约:", deployer.address); 
+  console.log("此账户将成为合约的 owner (DEFAULT_ADMIN_ROLE)。"); 
 
   // 获取 MintTokens 合约工厂
   const MintTokens = await hre.ethers.getContractFactory("MintTokens");
   // 部署 MintTokens 合约
-  const mintTokens = await MintTokens.deploy();
+  const mintTokens = await MintTokens.deploy("MonalloETH", "monETH");
 
   await mintTokens.waitForDeployment();
 
-  // MintTokens (MON代币) 合约已部署，其地址是：
-  console.log("MintTokens (MON代币) 合约已部署到地址:", mintTokens.target);
+  // MintTokens (MON 代币) 合约已部署，其地址是：
+  console.log("MintTokens (MON 代币) 合约已部署到地址:", mintTokens.target); 
 }
 
 main()

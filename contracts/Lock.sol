@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19; // 建议更新到 0.8.20 或更高，与 hardhat.config.js 保持一致
+pragma solidity ^0.8.19; 
 
 contract LockTokens {
     address public owner;
@@ -16,10 +16,10 @@ contract LockTokens {
     }
 
     function lock(address receiver) external payable {
-        require(msg.value > 0, "No imua sent");
+        require(msg.value > 0, "No eth sent");
 
-        uint256 fee = (msg.value * feeRate) / 1000;
-        uint256 amountAfterFee = msg.value - fee;
+        uint256 fee = (msg.value * feeRate) / 1000; // 手续费
+        uint256 amountAfterFee = msg.value - fee; // 实际用于跨链铸币的金额
 
         // 将费用累加到合约内部，而不是立即转账
         totalFeesCollected += fee;
