@@ -9,7 +9,7 @@ contract MintTokens is ERC20, AccessControl {
 
     mapping(bytes32 => bool) public processedTx;
 
-    constructor() ERC20("Monallo Token", "MON") {
+    constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) {
         // 授予部署者 DEFAULT_ADMIN_ROLE，以便管理其他角色
         // AccessControl 的 DEFAULT_ADMIN_ROLE 相当于 Ownable 的 owner
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
