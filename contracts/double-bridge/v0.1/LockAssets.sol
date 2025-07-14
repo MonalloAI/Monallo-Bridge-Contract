@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19; 
+pragma solidity ^0.8.19;
 
 contract LockTokens {
     address public owner;
@@ -10,6 +10,11 @@ contract LockTokens {
     event Locked(address indexed sender, address indexed receiver, uint256 amount, uint256 fee, bytes32 crosschainHash);
     // 费用提取事件
     event FeesWithdrawn(address indexed recipient, uint256 amount);
+
+    // 用于防止重复解锁的映射
+    mapping(bytes32 => bool) public processedUnlockTx;
+    // 解锁事件
+    event Unlocked(address indexed recipient, uint256 amount, bytes32 crosschainHash);
 
     constructor() {
         owner = msg.sender;
@@ -47,6 +52,23 @@ contract LockTokens {
         emit FeesWithdrawn(msg.sender, amountToWithdraw);
     }
 
+    // 新增：根据 Imua 链上的销毁事件解锁 ETH
+    // 此函数由 LockTokens 合约的 owner (即链下服务) 调用
+    function unlock(address recipient, uint256 amount, bytes32 crosschainHash) external {
+        require(msg.sender == owner, "Only owner can unlock"); // 只有 owner 可以调用此函数
+        require(!processedUnlockTx[crosschainHash], "Cross-chain hash already processed for unlock");
+        require(amount > 0, "Amount must be greater than 0");
+        require(address(this).balance >= amount, "Insufficient contract balance to unlock"); // 确保合约有足够的 ETH
+
+        processedUnlockTx[crosschainHash] = true; // 标记此跨链哈希已处理
+
+        // 将 ETH 转账给接收者
+        (bool success, ) = payable(recipient).call{value: amount}("");
+        require(success, "ETH unlock failed");
+
+        emit Unlocked(recipient, amount, crosschainHash);
+    }
+
     // 如果需要，可以动态修改收取的手续费比例
     // function setFeeRate(uint256 _newFeeRate) external {
     //     require(msg.sender == owner, "Only owner can set fee rate");
@@ -54,3 +76,4 @@ contract LockTokens {
     //     feeRate = _newFeeRate;
     // }
 }
+

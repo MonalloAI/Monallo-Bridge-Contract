@@ -1,13 +1,12 @@
-// scripts/grantMinterRole.js
 const hre = require("hardhat");
 require("dotenv").config();
 
-const TOKEN_ADDRESS = "0x21717FD336Db40Af910603f8a8b4aA202736C4Ec"; // 你的 MintTokens 合约地址 (在 imua 链上)
+const TOKEN_ADDRESS = "0x3C44c8b8A0A99fFAB40ffAe952bcC5A778ce0008"; // 你的 MintTokens 合约地址 (在 imua 链上)
 // **重要：这些地址将获得 imua 链上 MintTokens 的 MINTER_ROLE**
 // 确保 PRIVATE_KEY_ADDR1 对应的地址在这里
 const MINTER_ADDRESS_TO_GRANT = [
     "0x3E7BaB615e5F8867c3d1a5Aa62C0BF6528642E39",
-    "0x3dF5422b897d608630C9F708548F7C9f1f5e81fA",
+    
 ].filter(Boolean);
 
 async function main() {
@@ -26,8 +25,7 @@ async function main() {
     process.exit(1);
   }
 
-  const Token = await ethers.getContractFactory("contracts/simple-bridge/MintAssets.sol:MintTokens"); 
-  const token = await Token.attach(TOKEN_ADDRESS);
+  const Token = await ethers.getContractFactory("contracts/double-bridge/v0.1/MintAssets.sol:MintTokens");  const token = await Token.attach(TOKEN_ADDRESS);
 
   const MINTER_ROLE = ethers.keccak256(ethers.toUtf8Bytes("MINTER_ROLE"));
 
