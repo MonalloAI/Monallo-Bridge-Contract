@@ -3,12 +3,14 @@ require("dotenv").config();
 
 require("./tasks/lockSepolia.js");
 require("./tasks/manualMintIma.js");
+require("./tasks/burnIma.js"); 
+require("./tasks/manualUnlockSepolia.js"); 
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.20",
   networks: {
-    // imua 网络配置 (现在是A链，部署MintTokens)
+    // imua 网络配置 (现在是B链，部署MintTokens)
     imua: {
       url: process.env.IMUA_RPC_URL,
       // 部署MintTokens合约的账户 (DEFAULT_ADMIN_ROLE)

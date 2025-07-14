@@ -1,12 +1,12 @@
 const { task } = require("hardhat/config");
 require("dotenv").config();
 
-const TOKEN_ADDRESS = "0x21717FD336Db40Af910603f8a8b4aA202736C4Ec"; // Token 合约地址 (imua)
+const TOKEN_ADDRESS = "0x3C44c8b8A0A99fFAB40ffAe952bcC5A778ce0008"; // Token 合约地址 (imua)
 
-task("manual-mint-imua", "根据B链事件数据在A链 (imua) 上手动铸造代币") 
-  .addParam("recipient", "A链 (imua) 上接收代币的地址 (来自B链事件)") 
-  .addParam("amount", "要铸造的代币数量 (人类可读格式, 来自B链事件)") 
-  .addParam("crosschainhash", "来自B链事件的唯一数据哈希 (例如: 0x...64个字符)") 
+task("manual-mint-imua", "根据A链事件数据在B链 (imua) 上手动铸造代币") 
+  .addParam("recipient", "B链 (imua) 上接收代币的地址 (来自A链事件)") 
+  .addParam("amount", "要铸造的代币数量 (人类可读格式, 来自A链事件)") 
+  .addParam("crosschainhash", "来自A链事件的唯一数据哈希 (例如: 0x...64个字符)") 
   .setAction(async ({ recipient, amount, crosschainhash }, hre) => {
     // 运行此任务的账户需要是 MintTokens 合约的 MINTER_ROLE
     const signers = await hre.ethers.getSigners();
@@ -28,16 +28,15 @@ task("manual-mint-imua", "根据B链事件数据在A链 (imua) 上手动铸造�
     }
 
     // 使用 getContractAt 连接到 MintTokens 合约
-    const token = await hre.ethers.getContractAt("contracts/simple-bridge/MintAssets.sol:MintTokens", TOKEN_ADDRESS); 
+    const token = await hre.ethers.getContractAt("contracts/double-bridge/v0.1/MintAssets.sol:MintTokens", TOKEN_ADDRESS);
+    const amountWei = hre.ethers.parseUnits(amount, 18); 
 
-    const amountWei = hre.ethers.parseUnits(amount, 18); // 假设代币是18位小数
-
-    console.log(`正在尝试在A链 (imua) 上向 ${recipient} 铸造 ${amount} 代币，跨链哈希为 ${crosschainhash} (来自B链)...`); 
+    console.log(`正在尝试在B链 (imua) 上向 ${recipient} 铸造 ${amount} 代币，跨链哈希为 ${crosschainhash} (来自A链)...`); 
     try {
         // 使用手动操作员账户连接合约并调用 mint 函数
         const tx = await token.connect(manualOperator).mint(recipient, amountWei, crosschainhash);
         await tx.wait();
-        console.log("代币在A链 (imua) 上铸造成功! 交易哈希:", tx.hash); 
+        console.log("代币在B链 (imua) 上铸造成功! 交易哈希:", tx.hash); 
         console.log(`已为跨链哈希 ${crosschainhash} 向 ${recipient} 铸造 ${amount} 代币。`);
     } catch (error) {
         console.error("铸造代币失败:", error.message);
