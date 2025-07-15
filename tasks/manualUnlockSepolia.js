@@ -3,7 +3,7 @@ const { task } = require("hardhat/config");
 require("dotenv").config();
 
 // 请替换为你的 LockTokens 合约在 Sepolia 链上的实际地址
-const LOCK_TOKENS_ADDRESS = "0x8413b42F0811db62C10eC806bCE1A86775775ec3";
+const LOCK_TOKENS_ADDRESS = "0x3e8f3802d51D3D848a8560e25E9B960aa7Edf881";
 
 task("manual-unlock-sepolia", "根据B链事件数据在A链 (Sepolia) 上手动解锁 ETH")
   .addParam("recipient", "A链 (Sepolia) 上接收 ETH 的地址 (来自B链事件)")

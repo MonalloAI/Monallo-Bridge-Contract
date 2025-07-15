@@ -15,7 +15,7 @@ function askQuestion(query) {
     }))
 }
 
-const LOCK_TOKENS_ADDRESS = "0x8413b42F0811db62C10eC806bCE1A86775775ec3"; //LockTokens 合约地址 (在 Sepolia 链上)
+const LOCK_TOKENS_ADDRESS = "0x3e8f3802d51D3D848a8560e25E9B960aa7Edf881"; //LockTokens 合约地址 (在 Sepolia 链上)
 
 async function main() {
   const [owner] = await hre.ethers.getSigners(); // 获取合约 owner 的 signer
