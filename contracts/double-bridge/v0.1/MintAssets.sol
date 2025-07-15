@@ -8,13 +8,14 @@ contract MintTokens is ERC20, AccessControl {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     mapping(bytes32 => bool) public processedTx; // 用于铸币
-    mapping(bytes32 => bool) public processedBurnTx; // 用于防止重复销毁/解锁的映射
+    // processedBurnTx 映射可以移除，因为它只在 LockTokens 中使用 processedUnlockTx
+    // 并且在 MintTokens 合约中没有直接使用它来防止重放攻击（因为 crosschainHash 是在函数内部生成的）
 
     event Burned(address indexed burner, uint256 amount, address indexed sepoliaRecipient, bytes32 crosschainHash);
 
     constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender); // 授予部署者 MINTER_ROLE，运营方将使用此角色
+        _grantRole(MINTER_ROLE, msg.sender); // 授予部署者 MINTER_ROLE
     }
 
     function mint(address recipient, uint256 amount, bytes32 txHash) public onlyRole(MINTER_ROLE) {
@@ -23,26 +24,23 @@ contract MintTokens is ERC20, AccessControl {
         _mint(recipient, amount);
     }
 
-    // 新增：由桥运营者代为销毁用户的 maoETH
-    // 只有拥有 MINTER_ROLE 的地址才能调用此函数 (假设运营者同时是 Minter)
-    // 用户需要先调用 approve 授权给 msg.sender (运营者地址)
-    function burnFromOperator(address from, uint256 amount, address sepoliaRecipient) public onlyRole(MINTER_ROLE) {
+    // 重新添加：用户自己销毁 maoETH 代币，并触发跨链解锁事件
+    // 用户调用此函数将 maoETH 销毁，并指定在 Sepolia 链上接收 ETH 的地址
+    function burn(uint256 amount, address sepoliaRecipient) external {
         require(amount > 0, "Amount must be greater than 0");
-        // 检查调用者（msg.sender，即运营者）是否有权从 'from' 地址销毁 'amount' 数量的代币
-        // 这会内部调用 _approve 和 _spendAllowance，并检查 allowance 是否足够
-        _spendAllowance(from, msg.sender, amount); // OpenZeppelin ERC20 内部函数，检查并扣除 allowance
-        _burn(from, amount); // 从 'from' 地址销毁代币
+        // 从调用者地址销毁指定数量的代币
+        _burn(msg.sender, amount);
 
         // 生成一个唯一的哈希，用于在 Sepolia 链上防止重复解锁
-        // 注意：这里 uniqueBurnHash 仍然包含 'from' 地址，以确保唯一性与用户相关
-        bytes32 uniqueBurnHash = keccak256(abi.encodePacked(from, amount, sepoliaRecipient, block.timestamp, block.number, tx.origin));
+        // 组合了销毁者、销毁数量、Sepolia 接收者、当前时间戳、当前区块号和原始交易发起者
+        bytes32 uniqueBurnHash = keccak256(abi.encodePacked(msg.sender, amount, sepoliaRecipient, block.timestamp, block.number, tx.origin));
 
         // 发出 Burned 事件，链下服务将监听此事件并在 Sepolia 链上触发解锁
-        // 事件中的 burner 仍然是实际销毁代币的用户 'from'
-        emit Burned(from, amount, sepoliaRecipient, uniqueBurnHash);
+        emit Burned(msg.sender, amount, sepoliaRecipient, uniqueBurnHash);
     }
 
-    // AccessControl 提供了以下函数，由 DEFAULT_ADMIN_ROLE 调用：
+
+    // AccessControl 提供的函数保持不变
     // function grantRole(bytes32 role, address account) public virtual onlyRole(DEFAULT_ADMIN_ROLE)
     // function revokeRole(bytes32 role, address account) public virtual onlyRole(DEFAULT_ADMIN_ROLE)
     // function renounceRole(bytes32 role, address account) public virtual

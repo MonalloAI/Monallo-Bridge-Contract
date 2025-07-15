@@ -1,7 +1,7 @@
 const { task } = require("hardhat/config");
 
 // LockTokens 合约在 Sepolia 链上的实际地址
-const LOCK_TOKENS_ADDRESS = "0x8413b42F0811db62C10eC806bCE1A86775775ec3"; 
+const LOCK_TOKENS_ADDRESS = "0x3e8f3802d51D3D848a8560e25E9B960aa7Edf881"; 
 
 task("lock-sepolia", "在A链(sepolia)上锁定 ETH 并触发跨链事件")
   .addParam("receiver", "B链 (imua) 上接收代币的地址")

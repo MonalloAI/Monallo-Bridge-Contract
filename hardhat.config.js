@@ -1,10 +1,11 @@
+// hardhat.config.js
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
 require("./tasks/lockSepolia.js");
 require("./tasks/manualMintIma.js");
 require("./tasks/burnIma.js"); 
-require("./tasks/manualUnlockSepolia.js"); 
+require("./tasks/manualUnlockSepolia.js");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -16,8 +17,8 @@ module.exports = {
       // 部署MintTokens合约的账户 (DEFAULT_ADMIN_ROLE)
       // 另一个账户 (PRIVATE_KEY_ADDR1) 将被授予 MINTER_ROLE
       accounts: [
-        process.env.IMUA_PRIVATE_KEY,    
-        process.env.PRIVATE_KEY_ADDR1,   
+        process.env.IMUA_PRIVATE_KEY,
+        process.env.PRIVATE_KEY_ADDR1,
       ].filter(Boolean), // 过滤掉空的私钥
       chainId: parseInt(process.env.IMUA_CHAIN_ID),
     },
@@ -25,7 +26,7 @@ module.exports = {
       url: process.env.SEPOLIA_RPC_URL,
       // 部署LockTokens合约的账户 (owner)
       accounts: [
-        process.env.PRIVATE_KEY,         
+        process.env.PRIVATE_KEY,
       ],
       chainId: 11155111, // Sepolia的Chain ID
     },
