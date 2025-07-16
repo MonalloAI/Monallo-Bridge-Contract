@@ -1,11 +1,11 @@
 const hre = require("hardhat");
 require("dotenv").config();
 
-const TOKEN_ADDRESS = "0xC220A5B9E5e81F4695dBA43Da7B1eAddc95AdAd9"; //  合约地址 (在 imua 链上)
-// PRIVATE_KEY_ADDR1 
+const TOKEN_ADDRESS = "0xb168Df7e7B35741134745d0D0771Cdc55d06325d"; //  合约地址 (在 imua 链上)
+// PRIVATE_KEY_ADDR1
 const MINTER_ADDRESS_TO_GRANT = [
-    "0x3E7BaB615e5F8867c3d1a5Aa62C0BF6528642E39", 
-    "0x3dF5422b897d608630C9F708548F7C9f1f5e81fA", 
+    "0x3E7BaB615e5F8867c3d1a5Aa62C0BF6528642E39",
+    "0x21717FD336Db40Af910603f8a8b4aA202736C4Ec",
 ].filter(Boolean);
 
 async function main() {

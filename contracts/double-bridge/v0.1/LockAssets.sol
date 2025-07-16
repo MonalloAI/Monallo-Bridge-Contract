@@ -1,61 +1,44 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-contract LockTokens {
-    address public owner;
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract SepoliaBridge is Ownable {
     uint256 public feeRate = 8; // 0.8% => 8 / 1000
     uint256 public totalFeesCollected; // 累积的费用
 
-    // 防止重复铸币
+    // 防止重复解锁的映射
+    mapping(bytes32 => bool) public processedUnlockTx;
+
+    // 锁定事件
     event Locked(address indexed sender, address indexed receiver, uint256 amount, uint256 fee, bytes32 crosschainHash);
+    // 解锁事件
+    event Unlocked(address indexed recipient, uint256 amount, bytes32 crosschainHash);
     // 费用提取事件
     event FeesWithdrawn(address indexed recipient, uint256 amount);
 
-    // 用于防止重复解锁的映射
-    mapping(bytes32 => bool) public processedUnlockTx;
-    // 解锁事件
-    event Unlocked(address indexed recipient, uint256 amount, bytes32 crosschainHash);
+    constructor() Ownable(msg.sender) {} // 部署者成为 owner
 
-    constructor() {
-        owner = msg.sender;
-    }
-
-    function lock(address receiver) external payable {
+    // 用户调用此函数在 Sepolia 链上锁定 ETH
+    function lock(address imuaRecipient) external payable {
         require(msg.value > 0, "No eth sent");
 
         uint256 fee = (msg.value * feeRate) / 1000; // 手续费
         uint256 amountAfterFee = msg.value - fee; // 实际用于跨链铸币的金额
 
-        // 将费用累加到合约内部，而不是立即转账
+        // 将费用累加到合约内部
         totalFeesCollected += fee;
 
         // 生成一个唯一的 crosschainHash
-        // 组合了发送者、接收者、实际金额、当前时间戳、当前区块号和原始交易发起者
-        bytes32 uniqueHash = keccak256(abi.encodePacked(msg.sender, receiver, amountAfterFee, block.timestamp, block.number, tx.origin));
+        // 组合了发送者、接收者、实际金额、当前时间戳、当前区块号和 SepoliaBridge 地址
+        bytes32 uniqueHash = keccak256(abi.encodePacked(msg.sender, imuaRecipient, amountAfterFee, block.timestamp, block.number, address(this)));
 
         // 发出带有 crosschainHash 的 Locked 事件
-        emit Locked(msg.sender, receiver, amountAfterFee, fee, uniqueHash);
+        emit Locked(msg.sender, imuaRecipient, amountAfterFee, fee, uniqueHash);
     }
 
-    // 允许 owner 提取累积的费用
-    function withdrawFees() external {
-        require(msg.sender == owner, "Only owner can withdraw fees");
-        require(totalFeesCollected > 0, "No fees to withdraw");
-
-        uint256 amountToWithdraw = totalFeesCollected;
-        totalFeesCollected = 0; // 重置累积费用
-
-        // 使用 call 替代 transfer，更灵活，并检查成功
-        (bool success, ) = payable(msg.sender).call{value: amountToWithdraw}("");
-        require(success, "Fee withdrawal failed");
-
-        emit FeesWithdrawn(msg.sender, amountToWithdraw);
-    }
-
-    // 新增：根据 Imua 链上的销毁事件解锁 ETH
-    // 此函数由 LockTokens 合约的 owner (即链下服务) 调用
-    function unlock(address recipient, uint256 amount, bytes32 crosschainHash) external {
-        require(msg.sender == owner, "Only owner can unlock"); // 只有 owner 可以调用此函数
+    //  Imua 链上的销毁事件解锁 ETH
+    function unlock(address recipient, uint256 amount, bytes32 crosschainHash) external onlyOwner { // 暂时用 onlyOwner，实际应是 RELAYER_ROLE
         require(!processedUnlockTx[crosschainHash], "Cross-chain hash already processed for unlock");
         require(amount > 0, "Amount must be greater than 0");
         require(address(this).balance >= amount, "Insufficient contract balance to unlock"); // 确保合约有足够的 ETH
@@ -69,11 +52,23 @@ contract LockTokens {
         emit Unlocked(recipient, amount, crosschainHash);
     }
 
-    // 如果需要，可以动态修改收取的手续费比例
-    // function setFeeRate(uint256 _newFeeRate) external {
-    //     require(msg.sender == owner, "Only owner can set fee rate");
-    //     require(_newFeeRate <= 100, "Fee rate too high (max 10%)"); // 例如，限制最高10%
-    //     feeRate = _newFeeRate;
-    // }
-}
+    // 允许 owner 提取累积的费用
+    function withdrawFees() external onlyOwner {
+        require(totalFeesCollected > 0, "No fees to withdraw");
 
+        uint256 amountToWithdraw = totalFeesCollected;
+        totalFeesCollected = 0; // 重置累积费用
+
+        // 将费用转账给 owner
+        (bool success, ) = payable(owner()).call{value: amountToWithdraw}("");
+        require(success, "Fee withdrawal failed");
+
+        emit FeesWithdrawn(owner(), amountToWithdraw);
+    }
+
+    // 接收 ETH 的 fallback/receive 函数，允许用户直接发送 ETH 到此合约
+    receive() external payable {
+        // 可以选择在这里拒绝，或者允许直接接收，但通常建议通过 lock 函数
+        revert("Call lock function to deposit ETH");
+    }
+}
