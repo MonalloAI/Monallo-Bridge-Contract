@@ -1,16 +1,16 @@
 const { task } = require("hardhat/config");
 require("dotenv").config();
 
-const TOKEN_ADDRESS = "0xC220A5B9E5e81F4695dBA43Da7B1eAddc95AdAd9"; // Token 合约地址 (imua)
+const TOKEN_ADDRESS = "0xb168Df7e7B35741134745d0D0771Cdc55d06325d"; // Token 合约地址 (imua)
 
 task("manual-mint-imua", "根据A链事件数据在B链 (imua) 上手动铸造代币") 
   .addParam("recipient", "B链 (imua) 上接收代币的地址 (来自A链事件)") 
   .addParam("amount", "要铸造的代币数量 (人类可读格式, 来自A链事件)") 
   .addParam("crosschainhash", "来自A链事件的唯一数据哈希 (例如: 0x...64个字符)") 
   .setAction(async ({ recipient, amount, crosschainhash }, hre) => {
-    // 运行此任务的账户需要是 MintTokens 合约的 MINTER_ROLE
+
     const signers = await hre.ethers.getSigners();
-    // 确保 PRIVATE_KEY_ADDR1 对应的账户是 signers[1]
+
     const manualOperator = signers[1];
     console.log("正在使用手动操作员账户 (需是 MintTokens 的 MINTER_ROLE):", manualOperator.address); 
 
@@ -45,7 +45,7 @@ task("manual-mint-imua", "根据A链事件数据在B链 (imua) 上手动铸造�
         // 检查是否是重复交易哈希错误
         if (error.message.includes("Transaction hash already processed")) {
              console.error("错误原因可能是: 此 crosschainhash 已经被处理过，代币已铸造。");
-        } else if (error.message.includes("AccessControl: account ")) { // 更通用的 AccessControl 错误匹配
+        } else if (error.message.includes("AccessControl: account ")) { 
              console.error("错误原因可能是: 运行此任务的账户没有 MINTER_ROLE。"); 
         }
         process.exit(1);

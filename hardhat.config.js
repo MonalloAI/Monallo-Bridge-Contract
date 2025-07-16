@@ -1,11 +1,10 @@
-// hardhat.config.js
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
-require("./tasks/lockSepolia.js");
-require("./tasks/manualMintIma.js");
-require("./tasks/burnIma.js"); 
-require("./tasks/manualUnlockSepolia.js");
+require("./tasks/burnImaManager.js");
+require("./tasks/SepoliaBridge.js"); 
+require("./tasks/manualMintIma.js"); 
+require("./tasks/manualUnlockSepolia.js"); 
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -14,8 +13,7 @@ module.exports = {
     // imua 网络配置 (现在是B链，部署MintTokens)
     imua: {
       url: process.env.IMUA_RPC_URL,
-      // 部署MintTokens合约的账户 (DEFAULT_ADMIN_ROLE)
-      // 另一个账户 (PRIVATE_KEY_ADDR1) 将被授予 MINTER_ROLE
+
       accounts: [
         process.env.IMUA_PRIVATE_KEY,
         process.env.PRIVATE_KEY_ADDR1,
@@ -28,21 +26,21 @@ module.exports = {
       accounts: [
         process.env.PRIVATE_KEY,
       ],
-      chainId: 11155111, // Sepolia的Chain ID
+      chainId: 11155111, 
     },
   },
   etherscan: {
     apiKey: {
-      sepolia: process.env.ETHERSCAN_API_KEY, // Sepolia的API Key (用于LockTokens验证)
-      imua: process.env.IMUASCAN_API_KEY,     // imua的API Key (用于MintTokens验证)
+      sepolia: process.env.ETHERSCAN_API_KEY, 
+      imua: process.env.IMUASCAN_API_KEY,    
     },
     customChains: [
       {
         network: "imua",
         chainId: parseInt(process.env.IMUA_CHAIN_ID),
         urls: {
-          api: "YOUR_IMUASCAN_API_URL", // 替换为imua的API URL"
-          browser: "https://exoscan.org/", // 替换为imua的浏览器URL"
+          api: "YOUR_IMUASCAN_API_URL", 
+          browser: "https://exoscan.org/", 
         },
       },
     ],
