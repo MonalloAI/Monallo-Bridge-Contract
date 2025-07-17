@@ -1,6 +1,6 @@
 const { task } = require("hardhat/config");
 
-const SEPOLIA_BRIDGE_ADDRESS = "0xcFcE1E9e54207E7A031ef0DAB86e3BdF27e554c7"; //  Sepolia 地址
+const SEPOLIA_BRIDGE_ADDRESS = "0xE218189033593d5870228D8C3A15bC035730FEeA"; //  Sepolia 地址
 
 task("lock-sepolia-bridge", "在A链(sepolia)上通过 SepoliaBridge 锁定 ETH 并触发跨链事件")
   .addParam("receiver", "B链 (imua) 上接收代币的地址")

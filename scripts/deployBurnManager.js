@@ -4,7 +4,7 @@ async function main() {
   const [deployer] = await hre.ethers.getSigners();
   console.log("正在使用账户部署 BurnManager 合约:", deployer.address);
 
-  const MINT_TOKENS_ADDRESS = "0xb168Df7e7B35741134745d0D0771Cdc55d06325d"; //  MintTokens 地址
+  const MINT_TOKENS_ADDRESS = "0x06fF2cfbAAFDfcFbd4604B98C8a343dfa693476e"; //  MintTokens 地址
 
   if (!MINT_TOKENS_ADDRESS || MINT_TOKENS_ADDRESS === "0x...") {
     console.error("错误: 请更新 MINT_TOKENS_ADDRESS");

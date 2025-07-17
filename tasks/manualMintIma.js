@@ -1,7 +1,7 @@
 const { task } = require("hardhat/config");
 require("dotenv").config();
 
-const TOKEN_ADDRESS = "0xb168Df7e7B35741134745d0D0771Cdc55d06325d"; // Token 合约地址 (imua)
+const TOKEN_ADDRESS = "0x06fF2cfbAAFDfcFbd4604B98C8a343dfa693476e"; // Token 合约地址 (imua)
 
 task("manual-mint-imua", "根据A链事件数据在B链 (imua) 上手动铸造代币") 
   .addParam("recipient", "B链 (imua) 上接收代币的地址 (来自A链事件)") 

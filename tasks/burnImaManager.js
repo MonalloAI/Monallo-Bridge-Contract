@@ -1,15 +1,15 @@
 const { task } = require("hardhat/config");
 
-const MINT_TOKENS_ADDRESS = "0xb168Df7e7B35741134745d0D0771Cdc55d06325d"; // MintTokens 合约地址
-const BURN_MANAGER_ADDRESS = "0xbA2FC6a9F71DCF87480Ab6f0f2A7D0CE1e8ca580"; //  BurnManager 合约地址
+const MINT_TOKENS_ADDRESS = "0x06fF2cfbAAFDfcFbd4604B98C8a343dfa693476e"; // MintTokens 合约地址
+const BURN_MANAGER_ADDRESS = "0x5652A9FC9752E3D7937206d00740500F3878d952"; //  BurnManager 合约地址
 
 task("burn-imua-manager", "在A链 (imua) 上通过 BurnManager 销毁 maoETH 并触发跨链事件")
   .addParam("amount", "要销毁的 maoETH 数量 (人类可读格式, 例如: '100')")
   .addParam("sepoliarecipient", "B链 (Sepolia) 上接收 ETH 的地址")
   .setAction(async ({ amount, sepoliarecipient }, hre) => {
 
-    const userAccount = (await hre.ethers.getSigners())[1];
-    // --- END MODIFICATION ---
+    const signers = await hre.ethers.getSigners();
+    const userAccount = signers[1]; // <-- 修改这里，确保是 PRIVATE_KEY_ADDR1 对应的账户
     console.log("正在使用账户:", userAccount.address);
 
     if (!MINT_TOKENS_ADDRESS || MINT_TOKENS_ADDRESS === "0x...") {
