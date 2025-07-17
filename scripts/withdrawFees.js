@@ -14,12 +14,12 @@ function askQuestion(query) {
 }
 
 // SepoliaBridge 合约在 Sepolia 链上的实际地址
-const SEPOLIA_BRIDGE_ADDRESS = "0xcFcE1E9e54207E7A031ef0DAB86e3BdF27e554c7"; 
+const SEPOLIA_BRIDGE_ADDRESS = "0xE218189033593d5870228D8C3A15bC035730FEeA"; //SepoliaBridge 合约地址
 
 async function main() {
-  // 获取 SepoliaBridge 的 owner 账户
-  const [bridgeOwner] = await hre.ethers.getSigners();
-  console.log("正在使用账户 (SepoliaBridge 的 owner):", bridgeOwner.address);
+  // 获取 SepoliaBridge 的 DEFAULT_ADMIN_ROLE 账户
+  const [adminAccount] = await hre.ethers.getSigners();
+  console.log("正在使用账户 (SepoliaBridge 的 DEFAULT_ADMIN_ROLE):", adminAccount.address);
 
   if (!SEPOLIA_BRIDGE_ADDRESS || SEPOLIA_BRIDGE_ADDRESS === "0x...") {
     console.error("错误: 请在 scripts/withdrawFees.js 中更新 SEPOLIA_BRIDGE_ADDRESS");
@@ -46,8 +46,8 @@ async function main() {
     if (answer.toLowerCase() === 'y') {
       console.log(`正在从 SepoliaBridge 合约提取 ${formattedFees} Sepolia ETH 费用...`);
 
-      // 使用 SepoliaBridge 的 owner 账户连接 SepoliaBridge 并调用 withdrawFees
-      const tx = await sepoliaBridge.connect(bridgeOwner).withdrawFees();
+      // 使用拥有 DEFAULT_ADMIN_ROLE 的账户连接 SepoliaBridge 并调用 withdrawFees
+      const tx = await sepoliaBridge.connect(adminAccount).withdrawFees();
       await tx.wait();
 
       console.log("费用提取成功!");
@@ -64,7 +64,7 @@ async function main() {
 
   } catch (error) {
     console.error("提取费用失败:", error.message);
-    console.error("请确保运行此脚本的账户是 SepoliaBridge 合约的 owner，并且有足够的 Sepolia ETH 支付 Gas 费。");
+    console.error("请确保运行此脚本的账户是 SepoliaBridge 合约的 DEFAULT_ADMIN_ROLE，并且有足够的 Sepolia ETH 支付 Gas 费。");
     process.exit(1);
   }
 }
