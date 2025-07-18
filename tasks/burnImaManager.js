@@ -9,7 +9,7 @@ task("burn-imua-manager", "在A链 (imua) 上通过 BurnManager 销毁 maoETH �
   .setAction(async ({ amount, sepoliarecipient }, hre) => {
 
     const signers = await hre.ethers.getSigners();
-    const userAccount = signers[1]; // <-- 修改这里，确保是 PRIVATE_KEY_ADDR1 对应的账户
+    const userAccount = signers[1]; //  PRIVATE_KEY_ADDR1 对应的账户
     console.log("正在使用账户:", userAccount.address);
 
     if (!MINT_TOKENS_ADDRESS || MINT_TOKENS_ADDRESS === "0x...") {

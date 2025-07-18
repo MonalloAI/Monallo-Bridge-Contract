@@ -1,4 +1,3 @@
-// hardhat.config.js
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
@@ -37,8 +36,8 @@ module.exports = {
         network: "imua",
         chainId: parseInt(process.env.IMUA_CHAIN_ID),
         urls: {
-          apiURL: "https://api-eth.exocore-restaking.com/api", // 替换为 imua 链的实际 API URL
-          browserURL: "https://exoscan.org/", // 替换为 imua 链的实际浏览器 URL
+          apiURL: "https://api-eth.exocore-restaking.com/api", 
+          browserURL: "https://exoscan.org/", 
         },
       },
     ],
