@@ -1,45 +1,34 @@
+require("dotenv").config(); 
 require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config();
 
-require("./tasks/burnImaManager.js");
-require("./tasks/SepoliaBridge.js");
-require("./tasks/manualMintIma.js");
-require("./tasks/manualUnlockSepolia.js");
+const PRIVATE_KEY = process.env.PRIVATE_KEY; 
 
-/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.20", 
+  solidity: "0.8.19",
   networks: {
-    imua: {
-      url: process.env.IMUA_RPC_URL,
-      accounts: [
-        process.env.IMUA_PRIVATE_KEY,    // signers[0] for imua: Imua 部署者/管理员
-        process.env.PRIVATE_KEY_ADDR1,   // signers[1] for imua: Imua 用户/操作员
-      ].filter(Boolean),
-      chainId: parseInt(process.env.IMUA_CHAIN_ID),
+    platon: {
+      url: "https://openapi2.platon.network/rpc",
+      chainId: 210425,
+      accounts: [PRIVATE_KEY] 
+    },
+    zetachain: {
+      url: "https://zeta-chain-testnet.drpc.org",
+      chainId: 7001,
+      accounts: [PRIVATE_KEY]
     },
     sepolia: {
-      url: process.env.SEPOLIA_RPC_URL,
-      accounts: [
-        process.env.PRIVATE_KEY,         // signers[0] for sepolia: Sepolia 部署者/管理员/中继者
-      ],
+      url: "https://ethereum-sepolia-rpc.publicnode.com",
       chainId: 11155111,
+      accounts: [PRIVATE_KEY],
+      gasPrice: 24000000000, 
     },
+    imua: {
+      url: "https://api-eth.exocore-restaking.com",
+      chainId: 233,
+      accounts: [PRIVATE_KEY]
+    }
   },
-  etherscan: {
-    apiKey: {
-      sepolia: process.env.ETHERSCAN_API_KEY,
-      imua: process.env.IMUASCAN_API_KEY,
-    },
-    customChains: [
-      {
-        network: "imua",
-        chainId: parseInt(process.env.IMUA_CHAIN_ID),
-        urls: {
-          apiURL: "https://api-eth.exocore-restaking.com/api", 
-          browserURL: "https://exoscan.org/", 
-        },
-      },
-    ],
-  },
+  paths: {
+    sources: "./contracts/double-bridge/v0.2", 
+  }
 };
