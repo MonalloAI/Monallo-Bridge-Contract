@@ -1,15 +1,34 @@
 {
-  "platon": {
-    "source": "0x59def95E745b5F87146021FB2D3D6C857667F519"
-  },
   "sepolia": {
-    "source": "0x9c0723d6Dd1362FA48D2f6935D0867B729931622"
+    "source": "0x4195868b54b70d4420E6203e85A4b92a6705FF28",
+    "targets": {
+      "target_210425": "0x4Ae5CBA68A2Af947EdF8367fff074ef24f30d0C9",
+      "target_7001": "0xD3d731562D32F3C33321907f28635baA54297F39",
+      "target_233": "0xc6c8994BB6A1244Bf4CaD99C40F0Ae1CC9EFAD90"
+    }
   },
   "imua": {
     "targets": {
-      "target_210425": "0x75891AA11AC45ab150e81AE744728d11C72c472B",
-      "target_11155111": "0x1870f6D7A02994EE08E7c9BC3aEad81f00de1A05",
-      "target_7001": "0xD34F03fE714C2DbfDAC4fDCbEAe9d0d72c8031D5"
+      "target_210425": "0xABc28D728bbEF3159e8ab7dbB036125669B0cc64",
+      "target_11155111": "0x0ca5d56c30c5711B9AFFA6B4DB17367a987E234e",
+      "target_7001": "0x18578bf384eA9c6ea719B87979A3e322B5fef92d"
+    },
+    "source": "0xfcc4936B0b437469F5CE4C3cBD7eAa05CE5f581d"
+  },
+  "zetachain": {
+    "source": "0x1870f6D7A02994EE08E7c9BC3aEad81f00de1A05",
+    "targets": {
+      "target_210425": "0xf391c2F590A0950A6c0F81A56b8268c82d3592be",
+      "target_11155111": "0x801fACe2041139F65FAcDA17784CE72F43db2b3c",
+      "target_233": "0x09fd367a4FCFfD421c0A51e3bFce943d47F7efFB"
+    }
+  },
+  "platon": {
+    "source": "0x2fd92027B1afB80613B5720Df1015D41873F8d7C",
+    "targets": {
+      "target_11155111": "0x98E92671Ee7E8573b1c7711FE415aC8227005Ada",
+      "target_7001": "0xa7752D84e8ab6Cda80d07C4dF7b1Ef3919F49cE8",
+      "target_233": "0x1658cF06F2774ac2be7BB4308E53a7D8BE4861F2"
     }
   }
 }

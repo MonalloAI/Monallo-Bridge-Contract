@@ -1,0 +1,71 @@
+from:"sepolia": {"source": "0xf1CfdB9A5532bb601bd73ddbE6a74a4FbE3b8C7b"}
+to:"imua":{"maoEURC":"0x09fd367a4fcffd421c0a51e3bfce943d47f7effb"
+		"maoETH":"0xb4c628fcbc2e7c3e8e9bead3c2b2783c8e659c0b"
+		"maoUSDC":"0x7009ceb0c809c7d9f4cf07d0b8fc38a854227e23"
+		"maoZETA":"0x4fdd56a9358b60846aaab0e25d1eb4847e15a351"
+		"maoLAT":"0xf303d5319ed2146bd595c30fe5bb1928aaf00d9e"}
+
+to:"ZETA":{"maoIMUA:"0x1d0817f3b44942f58b88d028143f57daa35ed2d4"
+		 "maoETH":"0x4b27a47579cac5918fb0b437fffd150ed8a9822a"
+		 "maoUSDC":"0x629cd1cee3c8c14cd69aedfbab7e093e9e94e523"
+		 "maoLAT":""0xd950fd9c0f1d26ba39e363bef1849c877d07add0"}
+
+to:"platon":{"maoUSDC":"0xd27Ed1FAB355241Aa377eFd2Cf8A791220d69662"}
+
+from:"imua": {"source": "0x3D4097F44B2765722c4eD315f14AD4b5f718136e"}
+
+to:"sepolia":{"maoIMUA":"0xd0985e17787f224e9e413fe8239f1cb833b23fd1"
+		"maoZETA":"0xfce1ac30062efdd9119f6527392d4b935397f714"
+		"maoUSDC":"0x7a2dbb59753c6d413140e95390a2315bd470e54a"
+		"maoERUC":"0xdfec8f8c99ec22aa21e392aa00efb3f517c44987"
+		"maoLAT":"0x415a2653ccb8aa4574adc1cd841538ca242d3e75"}
+
+to:"ZETA":{"maoIMUA":"0x59def95e745b5f87146021fb2d3d6c857667f519"
+		"maoETH":"0x412135418d14a748887fbdc8cf804863251b6b40"
+		"maoUSDC":"0x1b6b2155dd0081f16129a895ff0b665c7cf36908"
+		"maoLAT":"0x3a0ecb8001dd989a03b8f0005ae6881f848e01b3"}
+
+to:"platon":{"maoUSDC":"0x5a9318e33fBD8ee2141B7Fa668F28c0CCC4069dF"}
+
+from:"ZETA":{"0x040F25D582Dea869E2FB0015523FeC5E05052255"}
+
+to:"sepolia":{"maoETH":"0x924adf0f2d55ed7400ed8b4d75576a0afcc1c0e9"
+			"maoUSDC":"0xfc62de06066b80e7e4a66e8fbc1deb6dbbd117f2"
+			"maoEURC":"0x48d53d06ddc6299816be0d7cfe757e556243b54d"
+			"maoZETA":"0x26ce4adb0aa670b4a2c4d37f0c8af8aecfda5607"
+			"maoLAT":"0x76d3c97548c966923c9e1eb5b7b57227c41a98e3"}
+
+to:"IMUA":{"maoETH":"0x5e75d3dc511e3ad83f49fa6145862d159fd69547"
+		 "maoUSDC":"0x84b3266064eaa16098f22fea41a2440ecf2caca5"
+		"maoZETA":"0xe405d74a42f2f537a84ddf42e68d16cc58eac6bf"
+		"maoLAT":"0x8413b42f0811db62c10ec806bce1a86775775ec3"}
+
+to:"platon":{"maoUSDC":"0x80f366ec74a3a7F17D24375d0483aE023b251413"}
+
+
+from : "platon":{"0x75891AA11AC45ab150e81AE744728d11C72c472B"}
+
+to:"sepolia":{"maoIMUA":"0x0d07e0cf51758495f101409ca11f4685d2872eed"
+			"maoZETA":"0xb0ceffd945f50f7858c32108337133e7cc1d2349"
+			"maoUSDC":"0x45325ba358ac005678fcb8aeee8a54991a61deb2"
+			"maoEURC":"0x3532a4110863e369ca4d40eeefe4c953aedb5e2e"
+			"maoLAT":"0xa547c1579f91b6e207a865c690266c35b0142b34"}
+
+to:"IMUA":{"maoETH":"0x644b4d44ee3b1afd5370b6e541d55edf5e6f2120"
+		 "maoUSDC":"0x0e7bbf4726ae1af305b73d9473be64cc3f40faf5"
+		 "maoZETA":"0xab0c5961954933a995890636e0d863a7a05ccce0"
+		 "maoLAT":"0xce84341ae7c8c0e25174db05fba7be7b9aba8ed4"}
+
+to:"ZEAT":{"maoETH":"0x5a9318e33fbd8ee2141b7fa668f28c0ccc4069df"
+		"maoUSDC":"0x80f366ec74a3a7f17d24375d0483ae023b251413"
+		"maoIMUA":"0x75891aa11ac45ab150e81ae744728d11c72c472b"
+		"maoLAT":"0xab86170ba5adf7bf75e095089102dc0714b550c7"}
+
+
+
+
+
+
+
+
+
