@@ -22,6 +22,8 @@ async function main() {
     if (sourceAddress) {
         console.log(`Source contract already deployed on ${networkName} at: ${sourceAddress}`);
         source = await ethers.getContractAt("Source", sourceAddress);
+        console.log(source);
+        
     } else {
         console.log(`Deploying Source contract on ${networkName}...`);
         const Source = await ethers.getContractFactory("Source");
@@ -54,8 +56,8 @@ async function main() {
 
 
     // 设置手续费配置
-    const isPercentageFee = false;
-    const feeValue = 1000000000000000; 
+    const isPercentageFee = true;
+    const feeValue = 80; 
     console.log("Setting fee config...");
     // 检查当前 feeConfig 是否已经设置，避免重复交易
     const currentFeeConfig = await source.feeConfig();
@@ -66,6 +68,7 @@ async function main() {
     } else {
         console.log("Fee config already set to the correct values.");
     }
+
 }
 
 main()
